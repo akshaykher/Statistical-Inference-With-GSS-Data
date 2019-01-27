@@ -1,0 +1,174 @@
+---
+title: "Statistical inference with the GSS data"
+author: "Akshay Kher"
+date: "2018-10-28"
+output:
+  html_document:
+    fig_height: 4
+    highlight: pygments
+    theme: spacelab
+  word_document: default
+  pdf_document: default
+---
+
+## Setup
+
+### Load packages
+
+```{r load-packages, message = FALSE}
+library(ggplot2)
+library(printr)
+```
+
+### Load data
+
+```{r load-data}
+load("gss.Rdata")
+```
+
+
+
+* * *
+
+## Part 1: Data
+
+#### General Social Survey (GSS)
+Since 1972, the General Social Survey (GSS) has been monitoring societal change and studying the growing complexity of American society. The GSS aims to gather data on contemporary American society in order to monitor and explain trends and constants in attitudes, behaviors, and attributes; to examine the structure and functioning of society in general as well as the role played by relevant subgroups; to compare the United States to other societies in order to place American society in comparative perspective and develop cross-national models of human society; and to make high-quality data easily accessible to scholars, students, policy makers, and others, with minimal cost and waiting.
+
+#### Survey Design
+
+GSS has conducted 26 in-person, cross-sectional surveys of the adult household population
+of the U.S. Interviews have been conducted with a total of 51,020 respondents. The 1972-74
+surveys used modified probability designs and the remaining surveys were completed using a
+full-probability sample design, **producing a high-quality, representative sample of the adult
+population of the U.S**. 
+
+#### Conclusions
+1. As our sample is a good representation of the US population, **we can use it to make inferences about the population**.
+
+2. Considering this is an observational study (as opposed to an experimental study with random assignment), **we will refrain from establishing casual relationships between variables**.
+
+* * *
+
+## Part 2: Research question
+
+There's been a lot of discussion about the way morals and attitudes about sex are changing in this country. If a man and woman have sex relations before marriage, do you think it is:
+
+* always wrong?
+* almost always wrong?
+* sometimes wrong?
+* not wrong at all?
+
+Now, how often do you attend religious events:
+
+*	Less than once a year?
+*	Once a year?
+*	Several times a year
+*	Once a month
+*	2-3 times a month?
+*	Nearly every week
+*	Every week
+*	More than once a week
+
+> A lot of research has been done on religion and sex separately. However, it would be interesting to explore any association between the two. So, does attending religious events have a relationship with opinion about pre-maritial sex? Let's explore this question!
+
+* * *
+
+## Part 3: Exploratory data analysis
+
+> Opinions of US Citizens on Pre-Maritial Sex:
+
+***Majority** of US Citizens believe that it is **not at all wrong** to have pre-maritial sex*
+
+```{r}
+data <- gss[,c("premarsx","attend")]
+data_clean <- na.omit(data)
+ggplot(data_clean,aes(x=premarsx)) + geom_bar() +
+    coord_flip() +
+    theme(axis.title.x=element_blank(), axis.title.y=element_blank())
+```
+
+> How often do US Citizens attend religious services?
+
+***Majority** of US Citizens attend religious services **every week***
+
+
+```{r}
+data <- gss[,c("premarsx","attend")]
+data_clean <- na.omit(data)
+ggplot(data_clean,aes(x=attend)) + geom_bar() +
+    coord_flip() +
+    theme(axis.title.x=element_blank(), axis.title.y=element_blank())
+```
+
+> Two-Way Table (Observed Counts)
+
+If you only observe the first column ***Less Than Once a Year*** and last column ***More Than Once a Week***, the opinion on pre-marital sex are opposite to each other. Thus, there might be an association between the variables.
+
+```{r}
+data <- gss[,c("premarsx","attend")]
+data_clean1 <- na.omit(data)
+data_clean1$premarsx <- droplevels(data_clean1$premarsx)
+data_clean1$attend <- droplevels(data_clean1$attend)
+table(data_clean1$premarsx,data_clean1$attend)
+```
+
+
+* * *
+
+## Part 4: Inference
+
+Now we need to evaluate the relationship between two categorical variables, both with more than 2 levels:
+
+(A) Opinion on pre-marital sex
+(B) How often does one attend religious events
+
+#### Thus, we will perform a **Chi-Square Test of Independence:**
+
+> **Ho:** Opinion on pre-marital sex and number of times a person attends a religious event are independent of each other. 
+<br />
+<br />
+**Ha:** Opinion on pre-marital sex and number of times a person attends a religious event are not independent on each other. 
+
+#### Checking Conditions:
+
+1. Independence
+    + Is it a random sample? **Yes**
+    + Are the total number samples (n) < 10% of population? **Yes**
+    + Does each observation contributes to just 1 level in the two-way table? **Yes**
+    
+2. Sample Size
+    + Does each cell have at least 5 *expected* cases? **Yes**
+    
+#### Chi-Square Test:
+
+**Finding the expected counts**. The observed counts were calculated in Part 3: Exploratory data analysis:
+```{r}
+chisq <- chisq.test(y = data_clean$attend,x = data_clean$premarsx)
+round(chisq$expected,0)
+```
+
+$$\chi^2 = \sum_{i=1}^k (O_i-E_i)^2/E_i$$
+$$E_i = Row\;Total_i * Column\;Total_i\;/\;Table\;Total $$
+$$Degrees\;of\;Freedom = (Row-1)*(Column-1) $$
+Where:
+
+* O: Observed Counts
+* E: Expected Counts
+* K: Number of cells
+
+```{r}
+print(chisq)
+```
+
+#### Observations:
+
+* **The $\chi^2$ statistic is `r round(chisq$statistic,1)`**
+* **The degrees of freedom are `r (dim(chisq$expected)[1]-1)*(dim(chisq$expected)[2]-1)`**
+* **The p-value: *Probability of observing a $\chi^2$ statistic at least as extreme as the one observed given Ho* is true is approximately `r chisq$p.value`**
+
+#### Conclusions:
+
+As p-value < 0.05, thus we reject Ho. **Hence, opinion on pre-marital sex and number of times a person attends a religious event are dependent on each other.**
+
+> Note: As chi-square test of independence does not have a single point estimate, we can not calculate a confidence interval.
