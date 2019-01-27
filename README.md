@@ -25,5 +25,5 @@ The project consists of:
 
 1. Data: Describes how the observations in the sample are collected, and the implications of data collection method on the scope of inference (generalizability / causality).
 2. Research question: Came up with a research question that I wanted to answer.
-3. EDA: Performed exploratory data analysis (EDA) that addresses the research question I outlined above.
-4. Inference: (28 points) Performed inference that addresses the research question outlined above.
+3. EDA: Performed exploratory data analysis (EDA) that addresses the research question outlined above.
+4. Inference: Performed inference that addresses the research question outlined above.
