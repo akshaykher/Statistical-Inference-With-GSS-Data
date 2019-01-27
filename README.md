@@ -1,5 +1,6 @@
 # Statistical-Inference-With-GSS-Data
 
+**Project Link**: http://www.rpubs.com/akshaykher/Statistical_Inference
 #### Research question
 There’s been a lot of discussion about the way morals and attitudes about sex are changing in this country. If a man and woman have sex relations before marriage, do you think it is:
 
