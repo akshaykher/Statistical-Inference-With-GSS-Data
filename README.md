@@ -22,7 +22,7 @@ Now, how often do you attend religious events:
 
 *A lot of research has been done on religion and sex separately. However, it would be interesting to explore any association between the two. So, does attending religious events have a relationship with opinion about pre-maritial sex? Let’s explore this question!*
 
-The project consists of:
+**The project consists of**:
 
 1. Data: Describes how the observations in the sample are collected, and the implications of data collection method on the scope of inference (generalizability / causality).
 2. Research question: Came up with a research question that I wanted to answer.
