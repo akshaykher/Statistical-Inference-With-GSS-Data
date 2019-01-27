@@ -3,10 +3,10 @@
 #### Research question
 There’s been a lot of discussion about the way morals and attitudes about sex are changing in this country. If a man and woman have sex relations before marriage, do you think it is:
 
-*always wrong?
-*almost always wrong?
-*sometimes wrong?
-*not wrong at all?
+* always wrong?
+* almost always wrong?
+* sometimes wrong?
+* not wrong at all?
 
 Now, how often do you attend religious events:
 
